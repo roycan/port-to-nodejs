@@ -1,0 +1,67 @@
+<html>
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <meta name="author" content="Sir Roy" />
+    <meta
+      name="description"
+      content="practice js while improving the template with meta tags and a favicon "
+    />
+    <meta name="keywords" content="PSHS-MC, CS3, meta, favicon" />
+    <title>Canseco - CS 3 </title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+
+  <body>
+
+    <!-- Navigation, stays on top -->
+    <div class="w3-top w3-bar w3-indigo">
+      <a href="/" class="w3-bar-item w3-button">Home</a>
+      <a href="/db_storage" class="w3-bar-item w3-button"> Database </a>
+    </div>
+
+    <div class="w3-content w3-padding-top-48">
+      <h1 id="welcome">
+        Messages
+      </h1>
+
+      <div id="log">
+        Log:
+
+        {{#each log}}
+        
+        <div class="w3-card w3-margin">
+          <div class="w3-container w3-blue">
+            <h3>{{this.name}}</h3>
+            <p>{{this.email}}
+            {{this.timestamp}}</p>
+          </div>
+          <div class="w3-container">
+            <p>{{this.message}}</p>
+          </div>
+        </div>
+      
+      
+      <br>
+      {{/each}}
+      </div>
+
+    </div>
+    <div class="footer">
+      &copy;
+      <span id="year"></span>
+      Sir Roy
+    </div>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+
+</html>

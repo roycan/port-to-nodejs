@@ -125,7 +125,14 @@ function getAll(){
       .on('data', function(key){
         getItem(key)
           .then(function(value){
-            entries[key] = value;
+            try{
+              const objectData = JSON.parse(value);
+              entries[key] = objectData;
+            }
+            catch{
+              entries[key] = value;
+            }
+            
           })
       })
       .on('end', function(){

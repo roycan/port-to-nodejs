@@ -28,37 +28,50 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req,res) => {
 
-  dbStorage.getItem('latestName')
-    .then(function (value){
-      res.render('index', {name: value});
-    })
-    .catch(function(err){
-      if (err.notFound){
-        res.render('index');
-      }
-      else{
-        res.status(500).send('Error retrieving data from the DB!');
-      }
-    })
+  res.redirect('index.html');
 
-  
 })
 
-app.post('/', (req,res) => {
+app.post('/saveNote', (req,res) => {
   const name = req.body.name;
+  const email = req.body.email;
+  const message = req.body.message;
   const timestamp = new Date().toLocaleString();
-  console.log(`saving: ${name} , ${timestamp}`);
-  dbStorage.setItem("latestName", name)
+  const key = name + timestamp;
+
+  let entry = {};
+  entry.name = name;
+  entry.email = email;
+  entry.message = message;
+  entry.timestamp = timestamp;
+
+  const value = JSON.stringify(entry);
+
+  console.log(`saving: ${key} , ${value}`);
+  dbStorage.setItem(key, value)
     .catch(function(err){
-      res.status(500).send("Error writing to DB!");
+      res.status(500).send("Error writing to DB!" + err);
     })
-  dbStorage.setItem(name, timestamp)
+  
+  res.redirect('thankyou.html');
+})
+
+
+app.get('/messages', function (req,res){
+
+  dbStorage.getAll()
+    .then(function(entries){
+      // Object.entries(entries).forEach(([key, value]) => {
+      //   console.log(key, JSON.parse(value.toString()));
+      // });
+      console.log(entries.toString());
+      res.render('messages', {log:entries})
+    })
     .catch(function(err){
-      res.status(500).send("Error writing to DB!");
+      res.status(500).send("failed to read DB records: " + err)
     })
 
-  
-  res.render('index', {name});
+
 })
 
 
@@ -83,7 +96,7 @@ app.post('/save', (req, res) => {
       res.render('db_storage', {keys: key, value: value});
     })
     .catch(function(err){
-      res.status(500).send('Error adding entry to the database');
+      res.status(500).send('Error adding entry to the database' + err);
     })
 })
 
@@ -98,7 +111,7 @@ app.post('/read', function (req,res) {
         res.status(404).send('Entry not found.')
       }
       else{
-        res.status(404).send('Error retrieving entry from the database.')
+        res.status(404).send('Error retrieving entry from the database.' + err)
       }
     })
 }) 
@@ -133,7 +146,7 @@ app.post('/showCount', (req, res) =>{
       res.render('db_storage', {count:count});
     })
     .catch(function (err){
-      res.status(500).send("Error retrieving number of entries from the database: ", err)
+      res.status(500).send("Error retrieving number of entries from the database: " + err)
     })
 })
 
@@ -144,7 +157,7 @@ app.post('/showLog', (req,res) =>{
       res.render('db_storage', {log:entries})
     })
     .catch(function(err){
-      res.status(500).send("failed to read DB records: ", err)
+      res.status(500).send("failed to read DB records: " + err)
     })
 })
 
@@ -154,7 +167,7 @@ app.post('/delete', (req, res) => {
       res.render('db_storage');
     })
     .catch(function (err){
-      res.status(500).send('Error deleting item from DB.');
+      res.status(500).send('Error deleting item from DB.' + err);
 
     })
   
@@ -167,7 +180,7 @@ app.post('/deleteAll', (req,res) =>{
       res.render('db_storage')
     })
     .catch(function(err){
-      res.status(500).send('Error deleting records from the DB.', err)
+      res.status(500).send('Error deleting records from the DB.' + err)
     })
   
 })
