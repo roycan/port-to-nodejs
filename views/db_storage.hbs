@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <meta name="author" content="Sir Roy">
+  <meta name="description" content="practice js while improving the template with meta tags and a favicon ">
+  <meta name="keywords" content="PSHS-MC, CS3, meta, favicon">
+  <title>Canseco - CS 3 </title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+                                                                
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+
+<body>
+
+  <!-- Navigation, stays on top -->
+  <div class="w3-top w3-bar w3-black">
+    <a href="/" class="w3-bar-item w3-button">Home</a>
+    <a href="/db_storage" class="w3-bar-item w3-button"> Database </a>
+  </div>
+
+  <!-- start content -->
+  <div class="w3-margin w3-container w3-padding-48">
+
+    <h1>These are controls for the DB Storage!</h1>
+
+    <div class="w3-row">
+
+      <div class="w3-col m6">
+
+        <form action="/save" method="post" class="w3-padding">
+
+          <input class="w3-input w3-border" name="key" placeholder="Key">
+          <input class="w3-input w3-border " name="value" placeholder="Value">
+          <button type="submit"> Create DB Entry </button>
+        </form>
+
+        <form action="/read" method="post" class="w3-padding">
+          <input name="read" placeholder="Key to Read" class="w3-input w3-border">
+          <button type="submit"> Read DB Entry</button>
+        </form>
+
+        <form action="/readIndex" method="post" class="w3-padding">
+          <input name="index" placeholder="Index" min="0" type="number" class="w3-input w3-border">
+          <button type="submit"> Get Key </button>
+        </form>
+
+        <form action="/delete" method="post" class="w3-padding">
+          <input name="delete" placeholder="Key to Delete" class="w3-input w3-border">
+          <button type='submit'> Delete DB Entry </button>
+        </form>
+        <form action="/deleteAll" method="post" class="w3-padding w3-inline">
+          <button type='submit'> Delete All </button>
+        </form>
+        <form action="/showKeys" method="post" class="w3-padding w3-inline">
+          <button type='submit'> Show Keys </button>
+        </form>
+        <form action="/showCount" method="post" class="w3-padding w3-inline">
+          <button type='submit'> Show Count </button>
+        </form>
+        <form action="/showLog" method="post" class="w3-padding w3-inline">
+          <button type='submit'> Show Log </button>
+        </form>
+
+
+
+      </div>
+
+      <div class="w3-col m6">
+        <div class="w3-large w3-indigo w3-text-white w3-padding">
+          <div id="keyCount"> Key Count: {{count}} </div>
+          <div id="keys"> Keys: {{keys}} </div>
+          <div id="value"> Value: {{value}} </div>
+          <div id="log"> Log:
+            {{#each log}}
+            {{@key}} - {{this}} <br>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <footer class=" w3-padding">
+    &copy; 2024 Sir Roy
+  </footer>
+
+</body>
+
+</html>

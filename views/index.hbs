@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<title>Hello You!</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+                                                                
+<link rel="stylesheet" href="style.css">
+<style>
+ 
+</style>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div class="navbar w3-top w3-bar">
+    <a href="/" class="w3-bar-item w3-button">Home</a>
+    <a href="/db_storage" class="w3-bar-item w3-button">Database</a>
+  </div>
+
+  <div class="w3-content w3-padding-top-48 ">
+    <h1 id="welcome"> {{#if name}}
+      Welcome {{name}}!
+      {{else}}
+
+      Welcome to My Website
+      {{/if}}
+    </h1>
+    <p>Enter your name so that I can save it to the database. Thanks! </p>
+
+    <form action="/" method="post" onsubmit="greet()">
+      <input class="w3-input w3-border" id="name" name="name" 
+      placeholder="Enter your name here"
+      value="{{name}}">
+      <button class="w3-margin" type="submit">Submit</button>
+    </form>
+
+    <script>
+      function greet() {
+        welcome.innerText = name.value;
+      }
+    </script>
+
+  </div>
+  <div class="footer">
+    &copy; <span id="year"></span> Sir Roy
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>
