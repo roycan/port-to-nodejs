@@ -24,17 +24,17 @@ function samplePutGet() {
 
 //////////// localStorage commands
 
-function length(callback) { 
-  return new Promise( function (resolve, reject) {
+function length(callback) {
+  return new Promise(function (resolve, reject) {
     let count = 0;
     db.createReadStream()
-      .on('data', function (){
+      .on('data', function () {
         count++;
       })
       .on('end', function () {
         resolve(count);
       })
-      .on('error', function(err){
+      .on('error', function (err) {
         console.log('error geting length: ', err);
         reject(err);
       })
@@ -44,21 +44,21 @@ function length(callback) {
 
 
 function key(n) {
-  return new Promise (function (resolve, reject){
+  return new Promise(function (resolve, reject) {
     let count = 0;
     db.createReadStream()
-      .on('data', function(data){
+      .on('data', function (data) {
         if (count === n) {
           resolve(data);
         }
         count++;
       })
-      .on('end', function (){
-        if (count < n){
+      .on('end', function () {
+        if (count < n) {
           reject('Record NOT found!')
         }
       })
-      .on('error', function(err){
+      .on('error', function (err) {
         reject(err);
       })
 
@@ -89,12 +89,12 @@ function getKeys() {
 function setItem(key, value) {
   // sample usage: 
   //    dbStorage.setItem('name1', name);
-  return new Promise( function (resolve, reject){
+  return new Promise(function (resolve, reject) {
     db.put(key, value)
       .then(function () {
         resolve();
       })
-      .catch(function(err){
+      .catch(function (err) {
         console.log("Error in saving item: ", err)
         reject(err);
       })
@@ -104,12 +104,12 @@ function setItem(key, value) {
 
 
 function getItem(key) {
-  return new Promise(function(resolve, reject){
+  return new Promise(function (resolve, reject) {
     db.get(key)
-      .then(function(value){
+      .then(function (value) {
         resolve(value);
       })
-      .catch(function(err){
+      .catch(function (err) {
         console.log('Error in retrieving item: ', err);
         reject(err);
       })
@@ -117,65 +117,69 @@ function getItem(key) {
 }
 
 
-function getAll(){
+function getAll() {
   return new Promise(function (resolve, reject) {
     const entries = {};
 
-    db.createKeyStream()
-      .on('data', function(key){
-        getItem(key)
-          .then(function(value){
-            try{
-              const objectData = JSON.parse(value);
-              entries[key] = objectData;
-            }
-            catch{
-              entries[key] = value;
-            }
-            
-          })
+    db.createReadStream()
+      .on('data', function (data) {
+        const key = data.key.toString();
+        const value = data.value.toString();
+        // console.log(value.toString())
+        try {
+          const objectData = JSON.parse(value);
+          entries[key] = objectData;
+          // console.log(objectData)
+        }
+        catch (error) {
+          entries[key] = value;
+          // console.log(value, error)
+        }
+
       })
-      .on('end', function(){
-        resolve(entries);
-      })
-      .on('error', function(err){
-        reject(err);
-      })
-  })
+  
+    .on('end', function () {
+      // console.log(entries)
+      resolve(entries);
+    })
+    .on('error', function (err) {
+      reject(err);
+    })
+})
 }
 
 
 function delItem(key) {
-  return new Promise (function (resolve, reject){
+  return new Promise(function (resolve, reject) {
     db.del(key)
-      .then(function (){
+      .then(function () {
         resolve();
       })
-      .catch(function (err){
+      .catch(function (err) {
         reject(err);
       })
   })
-  
+
 }
 
 
 function clear() {
-  return new Promise(function(resolve, reject){
+  return new Promise(function (resolve, reject) {
     db.createKeyStream()
-      .on('data', function (key){
+      .on('data', function (key) {
         db.del(key)
-          .catch(function (err){
+          .catch(function (err) {
             console.error(`Error deleting key: ${key}`, err);
           })
       })
-      .on('end', function(){
+      .on('end', function () {
         console.log("All records deleted!");
         resolve();
       })
-      .on('error', function(err){
+      .on('error', function (err) {
         reject(err);
       })
-  }) 
+  })
 
 }
 

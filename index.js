@@ -61,10 +61,7 @@ app.get('/messages', function (req,res){
 
   dbStorage.getAll()
     .then(function(entries){
-      // Object.entries(entries).forEach(([key, value]) => {
-      //   console.log(key, JSON.parse(value.toString()));
-      // });
-      console.log(entries.toString());
+      // console.log(entries)
       res.render('messages', {log:entries})
     })
     .catch(function(err){
@@ -154,6 +151,17 @@ app.post('/showCount', (req, res) =>{
 app.post('/showLog', (req,res) =>{
   dbStorage.getAll()
     .then(function(entries){
+      // console.log(entries);
+      // stringify nested objects in entries
+      for (let key in entries){
+        
+        const value = entries[key];
+        if (typeof value === "object"){
+          entries[key] = JSON.stringify(value);
+          // console.log(key , entries[key])
+        }
+        
+      }
       res.render('db_storage', {log:entries})
     })
     .catch(function(err){
