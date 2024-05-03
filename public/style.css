@@ -76,3 +76,8 @@ img{
   padding:20px;
   width: 65%;
 }
+
+
+.w3-inline {
+  display: inline-block;
+}

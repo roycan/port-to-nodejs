@@ -6,6 +6,7 @@ const path  = require('path');
 
 // Loads the database
 const dbStorage = require('./dbStorage');
+const { type } = require('os');
 
 
 
@@ -44,23 +45,41 @@ app.get('/', (req,res) => {
   
 })
 
-app.post('/', (req,res) => {
-  const name = req.body.name;
-  const timestamp = new Date().toLocaleString();
-  console.log(`saving: ${name} , ${timestamp}`);
-  dbStorage.setItem("latestName", name)
+app.post('/saveNote', (req,res) => {
+  const entry = {};
+  entry.name = req.body.Name;
+  entry.email = req.body.Email;
+  entry.message = req.body.Message;
+  entry.timestamp = new Date().toLocaleString();
+  let key = entry.name + entry.timestamp;
+  let value = JSON.stringify(entry);
+  console.log(`saving: ${key} , ${value}`);
+
+  dbStorage.setItem(key, value)
     .catch(function(err){
-      res.status(500).send("Error writing to DB!");
-    })
-  dbStorage.setItem(name, timestamp)
-    .catch(function(err){
-      res.status(500).send("Error writing to DB!");
+      res.status(500).send("Error writing to DB!" + err);
     })
 
   
-  res.render('index', {name});
+  res.redirect('thankyou.html');
 })
 
+
+app.get('/messages', function(req,res){
+  dbStorage.getAll()
+   .then(function(entries){
+     
+    for (let key in entries){
+      const value = entries[key];
+      console.log(typeof key, "- " , typeof(value))
+    }
+
+      res.render('messages', {log: entries, objlog: entries});
+    })
+   .catch(function(err){
+      res.status(500).send('Error retrieving data from the DB!');
+    })
+})
 
 
 
