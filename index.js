@@ -83,6 +83,7 @@ app.get('/messages', function(req,res){
 
 
 
+
 //////// DB STORAGE ADMIN ROUTES
 app.get('/db_storage', (req,res) => {
   res.render('db_storage');
@@ -102,7 +103,7 @@ app.post('/save', (req, res) => {
       res.render('db_storage', {keys: key, value: value});
     })
     .catch(function(err){
-      res.status(500).send('Error adding entry to the database');
+      res.status(500).send('Error adding entry to the database' + err);
     })
 })
 
@@ -117,7 +118,7 @@ app.post('/read', function (req,res) {
         res.status(404).send('Entry not found.')
       }
       else{
-        res.status(404).send('Error retrieving entry from the database.')
+        res.status(404).send('Error retrieving entry from the database.' + err)
       }
     })
 }) 
@@ -152,7 +153,7 @@ app.post('/showCount', (req, res) =>{
       res.render('db_storage', {count:count});
     })
     .catch(function (err){
-      res.status(500).send("Error retrieving number of entries from the database: ", err)
+      res.status(500).send("Error retrieving number of entries from the database: " + err)
     })
 })
 
@@ -160,10 +161,21 @@ app.post('/showCount', (req, res) =>{
 app.post('/showLog', (req,res) =>{
   dbStorage.getAll()
     .then(function(entries){
+      // console.log(entries);
+      // stringify nested objects in entries
+      for (let key in entries){
+        
+        const value = entries[key];
+        if (typeof value === "object"){
+          entries[key] = JSON.stringify(value);
+          // console.log(key , entries[key])
+        }
+        
+      }
       res.render('db_storage', {log:entries})
     })
     .catch(function(err){
-      res.status(500).send("failed to read DB records: ", err)
+      res.status(500).send("failed to read DB records: " + err)
     })
 })
 
@@ -173,7 +185,7 @@ app.post('/delete', (req, res) => {
       res.render('db_storage');
     })
     .catch(function (err){
-      res.status(500).send('Error deleting item from DB.');
+      res.status(500).send('Error deleting item from DB.' + err);
 
     })
   
@@ -186,12 +198,10 @@ app.post('/deleteAll', (req,res) =>{
       res.render('db_storage')
     })
     .catch(function(err){
-      res.status(500).send('Error deleting records from the DB.', err)
+      res.status(500).send('Error deleting records from the DB.' + err)
     })
   
 })
-
-
 
 /////// TEST ROUTES
 app.get('/samplePutGet', (req,res) => {
